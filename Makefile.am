@@ -22,6 +22,7 @@ librnnoise_nu_la_SOURCES = \
 	src/denoise.c \
 	src/rnn.c \
 	src/rnn_data.c \
+	src/rnn_reader.c \
 	src/models/cb.c \
 	src/models/mp.c \
 	src/models/bd.c \

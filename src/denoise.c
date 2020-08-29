@@ -61,9 +61,6 @@
 
 #if SMOOTH_BANDS
 #define NB_BANDS 22
-#else
-#define NB_BANDS 21
-#endif
 
 #define CEPS_MEM 8
 #define NB_DELTA_CEPS 6
@@ -116,7 +113,6 @@ struct DenoiseState {
   float max_attenuation;
 };
 
-#if SMOOTH_BANDS
 void compute_band_energy(DenoiseState *st, float *bandE, const kiss_fft_cpx *X) {
   int i;
   float sum[NB_BANDS] = {0};
@@ -320,9 +316,6 @@ int rnnoise_init(DenoiseState *st, RNNModel *model) {
     st->rnn.model = model;
   else
     st->rnn.model = &model_cb;
-  st->rnn.vad_gru_state = calloc(sizeof(float), st->rnn.model->vad_gru_size);
-  st->rnn.noise_gru_state = calloc(sizeof(float), st->rnn.model->noise_gru_size);
-  st->rnn.denoise_gru_state = calloc(sizeof(float), st->rnn.model->denoise_gru_size);
   return 0;
 }
 
