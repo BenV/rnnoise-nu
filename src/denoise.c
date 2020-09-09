@@ -79,8 +79,8 @@
 #endif
 
 
-/* cb is the default model */
-extern const struct RNNModel model_cb;
+/* test is the default model */
+extern const struct RNNModel model_test;
 
 
 static const opus_int16 eband5ms[] = {
@@ -319,7 +319,7 @@ int rnnoise_init(DenoiseState *st, RNNModel *model) {
   if (model)
     st->rnn.model = model;
   else
-    st->rnn.model = &model_cb;
+    st->rnn.model = &model_test;
   st->rnn.vad_gru_state = calloc(sizeof(float), st->rnn.model->vad_gru_size);
   st->rnn.noise_gru_state = calloc(sizeof(float), st->rnn.model->noise_gru_size);
   st->rnn.denoise_gru_state = calloc(sizeof(float), st->rnn.model->denoise_gru_size);
@@ -620,7 +620,7 @@ int main(int argc, char **argv) {
   int vad_cnt=0;
   int gain_change_count=0;
   float speech_gain = 1, noise_gain = 1;
-  FILE *f1, *f2;
+  FILE *f1, *f2, *fout;
   int maxCount;
   DenoiseState *st;
   DenoiseState *noise_state;
@@ -632,8 +632,9 @@ int main(int argc, char **argv) {
     fprintf(stderr, "usage: %s <speech> <noise> <count>\n", argv[0]);
     return 1;
   }
-  f1 = fopen(argv[1], "r");
-  f2 = fopen(argv[2], "r");
+  f1 = fopen(argv[1], "rb");
+  f2 = fopen(argv[2], "rb");
+  fout = fopen("output.f32", "wb");
   maxCount = atoi(argv[3]);
   for(i=0;i<150;i++) {
     short tmp[FRAME_SIZE];
@@ -726,15 +727,16 @@ int main(int argc, char **argv) {
     }
     count++;
 #if 1
-    fwrite(features, sizeof(float), NB_FEATURES, stdout);
-    fwrite(g, sizeof(float), NB_BANDS, stdout);
-    fwrite(Ln, sizeof(float), NB_BANDS, stdout);
-    fwrite(&vad, sizeof(float), 1, stdout);
+    fwrite(features, sizeof(float), NB_FEATURES, fout);
+    fwrite(g, sizeof(float), NB_BANDS, fout);
+    fwrite(Ln, sizeof(float), NB_BANDS, fout);
+    fwrite(&vad, sizeof(float), 1, fout);
 #endif
   }
   fprintf(stderr, "matrix size: %d x %d\n", count, NB_FEATURES + 2*NB_BANDS + 1);
   fclose(f1);
   fclose(f2);
+  fclose(fout);
   return 0;
 }
 

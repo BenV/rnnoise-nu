@@ -1,0 +1,7 @@
+*.f32
+*.h5
+*.hdf5
+*.o
+*.lo
+denoise_training.exe
+denoise_training

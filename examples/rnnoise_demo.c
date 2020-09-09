@@ -29,11 +29,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <io.h>
+#include <fcntl.h>
+
 #include "rnnoise-nu.h"
 
 #define FRAME_SIZE 480
 
 int main(int argc, char **argv) {
+  _setmode(_fileno(stdin), _O_BINARY);
+  _setmode(_fileno(stdout), _O_BINARY);
+
   int i, ci;
   int first = 1;
   int channels;
